@@ -17,14 +17,14 @@ AZSWeapon::AZSWeapon()
 	this->SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal Mesh"));
 	RootComponent = this->SkeletalMeshComponent;
 
-	this->MuzzleSocketName = "MuzzleSocket";
-	this->TracerTargetName = "Target";
+	this->MuzzleSocketName	 = "MuzzleSocket";
+	this->TracerTargetName	 = "Target";
 
-	this->DefaultDamage = 15.f;
-	this->RateOfFire = 600;
+	this->DefaultDamage		 = 15.f;
+	this->RateOfFire		 = 600;
 
-	this->MaxAmmo = 30;
-	this->TimeToReload = 2;
+	this->MaxAmmo			 = 30;
+	this->TimeToReload		 = 2;
 
 	this->BulletSpreadRadius = 2.f;
 }

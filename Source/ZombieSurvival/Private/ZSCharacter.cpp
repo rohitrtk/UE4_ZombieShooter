@@ -113,7 +113,9 @@ void AZSCharacter::ReloadWeapon()
 	if (CurrentWeapon && !IsReloading)
 	{
 		CurrentWeapon->Reload();
-		this->ReloadWeaponTest();
+
+		this->HandleReloadAnimation();
+
 		IsReloading = true;
 	}
 }

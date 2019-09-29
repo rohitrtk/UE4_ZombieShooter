@@ -38,7 +38,7 @@ protected:
 	void ReloadWeapon();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Gameplay")
-	void ReloadWeaponTest();
+	void HandleReloadAnimation();
 
 	UFUNCTION()
 	void OnHealthChanged(UZSHealthComponent* healthComponent, float health, float healthDelta, const class UDamageType* damageType, class AController* instigatedBy, AActor* damageCauser);

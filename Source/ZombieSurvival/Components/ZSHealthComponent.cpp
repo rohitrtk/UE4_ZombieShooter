@@ -26,7 +26,7 @@ void UZSHealthComponent::HandleTakeAnyDamage(AActor* damagedActor, float damage,
 
 	this->CurrentHealth = FMath::Clamp(CurrentHealth - damage, 0.f, StartingHealth);
 
-	UE_LOG(LogTemp, Log, TEXT("Health Changed: %s"), *FString::SanitizeFloat(CurrentHealth));
+	UE_LOG(LogTemp, Log, TEXT("%s Health: %s"), *GetName(), *FString::SanitizeFloat(CurrentHealth));
 
 	this->OnHealthChanged.Broadcast(this, CurrentHealth, damage, damageType, instigatedBy, damageCauser);
 }
