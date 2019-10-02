@@ -54,6 +54,11 @@ void AZSDestructable::OnHealthChanged(UZSHealthComponent* healthComponent, float
 		UGameplayStatics::ApplyRadialDamageWithFalloff(GetWorld(), BaseDamage, MinimumDamage, GetActorLocation(), 
 			InnerRadius, OuterRadius, DamageFallOff, UDamageType::StaticClass(), TArray<AActor*>());
 
+		if (DestructionSoundEffect)
+		{
+			UGameplayStatics::SpawnSoundAtLocation(GetWorld(), DestructionSoundEffect, GetActorLocation());
+		}
+
 		Destroy();
 	}
 }

@@ -7,6 +7,7 @@
 class UStaticMeshComponent;
 class UZSHealthComponent;
 class USphereComponent;
+class USoundBase;
 
 UCLASS()
 class ZOMBIESURVIVAL_API AZSDestructable : public AActor
@@ -48,6 +49,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
 	float DamageFallOff;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FX")
+	USoundBase* DestructionSoundEffect;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
