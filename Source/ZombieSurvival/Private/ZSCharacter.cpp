@@ -6,7 +6,12 @@
 #include "Components/InputComponent.h"
 #include "ZombieSurvival.h"
 #include "ZSWeapon.h"
+#include "DrawDebugHelpers.h"
 #include "Components/ZSHealthComponent.h"
+#include "Blueprint/UserWidget.h"
+
+static int32 DebugHealthString = 0;
+FAutoConsoleVariableRef CVARDebugHealthString(TEXT("ZS.DebugHealthString"), DebugHealthString, TEXT("Draws debug strings for characters when they get hit"), ECVF_Cheat);
 
 AZSCharacter::AZSCharacter()
 {
@@ -108,8 +113,6 @@ void AZSCharacter::StopFire()
 
 void AZSCharacter::ReloadWeapon()
 {
-	UE_LOG(LogTemp, Log, TEXT("RELOAD"));
-
 	if (CurrentWeapon && !IsReloading)
 	{
 		CurrentWeapon->Reload();
@@ -164,7 +167,14 @@ void AZSCharacter::ZoomOut()
 void AZSCharacter::OnHealthChanged(UZSHealthComponent* healthComponent, float health, float healthDelta,
 	const class UDamageType* damageType, class AController* instigatedBy, AActor* damageCauser)
 {
-	if (health <= 0.f && !IsDead)
+	if (IsDead) return;
+
+	if (DebugHealthString > 0)
+	{
+		DrawDebugString(GetWorld(), GetActorLocation(), FString::SanitizeFloat(health), nullptr, FColor::White, 2.f);
+	}
+
+	if (health <= 0.f)
 	{
 		this->IsDead = true;
 
