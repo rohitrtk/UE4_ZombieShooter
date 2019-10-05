@@ -2,10 +2,18 @@
 #include "Components/ZSHealthComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Perception/AIPerceptionComponent.h"
 
 AZSZombie::AZSZombie()
 {
+	this->GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
 	this->HealthComponent = CreateDefaultSubobject<UZSHealthComponent>(TEXT("Health Component"));
+
+	this->PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component"));
+	
+	//UAISenseConfig_Sight config;
+	//this->PerceptionComponent->ConfigureSense();
 }
 
 void AZSZombie::BeginPlay()
@@ -26,7 +34,8 @@ void AZSZombie::OnHealthChanged(UZSHealthComponent* healthComponent, float healt
 		this->GetMovementComponent()->StopMovementImmediately();
 		this->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		SetLifeSpan(3.f);
+		this->GetMesh()->SetSimulatePhysics(true);
+		
+		//SetLifeSpan(3.f);
 	}
 }
-

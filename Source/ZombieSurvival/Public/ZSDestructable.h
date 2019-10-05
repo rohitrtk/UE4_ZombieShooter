@@ -53,6 +53,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FX")
 	USoundBase* DestructionSoundEffect;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FX")
+	UParticleSystem* DestructionParticleEffect;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 

@@ -4,6 +4,7 @@
 #include "Components/ZSHealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/DamageType.h"
+#include "Particles/ParticleSystem.h"
 
 AZSDestructable::AZSDestructable()
 {
@@ -22,12 +23,12 @@ AZSDestructable::AZSDestructable()
 	this->OuterSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Outer Sphere"));
 	this->OuterSphere->SetSphereRadius(InnerRadius);
 	this->OuterSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	this->OuterSphere->AttachTo(RootComponent);
+	this->OuterSphere->SetupAttachment(RootComponent);
 
 	this->InnerSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Inner Sphere"));
 	this->InnerSphere->SetSphereRadius(OuterRadius);
 	this->InnerSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	this->InnerSphere->AttachTo(RootComponent);
+	this->InnerSphere->SetupAttachment(RootComponent);
 
 	this->destroyed = false;
 }
@@ -53,6 +54,11 @@ void AZSDestructable::OnHealthChanged(UZSHealthComponent* healthComponent, float
 
 		UGameplayStatics::ApplyRadialDamageWithFalloff(GetWorld(), BaseDamage, MinimumDamage, GetActorLocation(), 
 			InnerRadius, OuterRadius, DamageFallOff, UDamageType::StaticClass(), TArray<AActor*>());
+
+		if (DestructionParticleEffect)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestructionParticleEffect, GetActorLocation());
+		}
 
 		if (DestructionSoundEffect)
 		{
