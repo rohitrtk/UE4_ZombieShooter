@@ -6,6 +6,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UAnimMontage;
 class UZSHealthComponent;
 class AZSWeapon;
 
@@ -36,9 +37,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void ReloadWeapon();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Gameplay")
-	void HandleReloadAnimation();
 
 	UFUNCTION()
 	void OnHealthChanged(UZSHealthComponent* healthComponent, float health, float healthDelta, const class UDamageType* damageType, class AController* instigatedBy, AActor* damageCauser);
@@ -78,6 +76,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	bool IsDead;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
+	UAnimMontage* ReloadAnimMontage;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

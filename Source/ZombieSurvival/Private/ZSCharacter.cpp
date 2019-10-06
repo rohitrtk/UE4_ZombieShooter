@@ -9,6 +9,8 @@
 #include "DrawDebugHelpers.h"
 #include "Components/ZSHealthComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
 
 static int32 DebugHealthString = 0;
 FAutoConsoleVariableRef CVARDebugHealthString(TEXT("ZS.DebugHealthString"), DebugHealthString, TEXT("Draws debug strings for characters when they get hit"), ECVF_Cheat);
@@ -117,7 +119,11 @@ void AZSCharacter::ReloadWeapon()
 	{
 		CurrentWeapon->Reload();
 
-		this->HandleReloadAnimation();
+		UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
+		if (animInstance && ReloadAnimMontage)
+		{
+			animInstance->Montage_Play(ReloadAnimMontage);
+		}
 
 		IsReloading = true;
 	}

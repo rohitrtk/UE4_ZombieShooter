@@ -14,10 +14,10 @@ AZSDestructable::AZSDestructable()
 
 	this->HealthComponent = CreateDefaultSubobject<UZSHealthComponent>(TEXT("Health Component"));
 
-	this->BaseDamage	= 50.f;
+	this->BaseDamage = 50.f;
 	this->MinimumDamage = 5.f;
-	this->InnerRadius	= 100.f;
-	this->OuterRadius	= 600.f;
+	this->InnerRadius = 100.f;
+	this->OuterRadius = 600.f;
 	this->DamageFallOff = 5.f;
 	
 	this->OuterSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Outer Sphere"));

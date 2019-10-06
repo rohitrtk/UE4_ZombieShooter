@@ -5,7 +5,6 @@
 #include "ZSZombie.generated.h"
 
 class UZSHealthComponent;
-class UAIPerceptionComponent;
 
 UCLASS()
 class ZOMBIESURVIVAL_API AZSZombie : public ACharacter
@@ -23,9 +22,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UZSHealthComponent* HealthComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	UAIPerceptionComponent* PerceptionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	bool IsDead;
