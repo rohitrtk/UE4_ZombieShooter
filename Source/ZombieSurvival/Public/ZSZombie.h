@@ -5,6 +5,7 @@
 #include "ZSZombie.generated.h"
 
 class UZSHealthComponent;
+class UBoxComponent;
 
 UCLASS()
 class ZOMBIESURVIVAL_API AZSZombie : public ACharacter
@@ -25,4 +26,16 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	bool IsDead;
+
+	UFUNCTION(BlueprintCallable)
+	void Attack();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
+	float AttackRange;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
+	float AttackDamage;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Component")
+	UBoxComponent* AttackBox;
 };

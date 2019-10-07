@@ -2,18 +2,34 @@
 #include "Components/ZSHealthComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/DamageType.h"
+#include "ZSCharacter.h"
+#include "ZombieSurvival.h"
 
 AZSZombie::AZSZombie()
 {
 	this->GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	this->HealthComponent = CreateDefaultSubobject<UZSHealthComponent>(TEXT("Health Component"));
+
+	this->AttackRange = 16.f;
+	this->AttackDamage = 50.f;
+
+	this->AttackBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Attack Box Collider"));
+	this->AttackBox->SetRelativeLocation(FVector(53.f, 0.f, 0.f));
+	this->AttackBox->SetBoxExtent(FVector(AttackRange, 32.f, 72.f));
+	this->AttackBox->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
+	this->AttackBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 }
 
 void AZSZombie::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	this->AttackBox->SetBoxExtent(FVector(AttackRange, 32.f, 72.f));
+
 	this->HealthComponent->OnHealthChanged.AddDynamic(this, &AZSZombie::OnHealthChanged);
 }
 
@@ -29,7 +45,24 @@ void AZSZombie::OnHealthChanged(UZSHealthComponent* healthComponent, float healt
 		this->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		this->GetMesh()->SetSimulatePhysics(true);
+	}
+}
+
+void AZSZombie::Attack()
+{
+	TArray<AActor*> overlappingActors;
+
+	AttackBox->GetOverlappingActors(overlappingActors);
+	UE_LOG(LogTemp, Display, TEXT("Attacking %d targets"), overlappingActors.Num());
+
+	AZSCharacter* potentialPlayer = nullptr;
+	for (const auto& actor : overlappingActors)
+	{
+		potentialPlayer = Cast<AZSCharacter>(actor);
 		
-		//SetLifeSpan(3.f);
+		if (!potentialPlayer) continue;
+		
+		UE_LOG(LogTemp, Display, TEXT("Attacking target!"));
+		UGameplayStatics::ApplyDamage(potentialPlayer, AttackDamage, GetController(), this, UDamageType::StaticClass());
 	}
 }
