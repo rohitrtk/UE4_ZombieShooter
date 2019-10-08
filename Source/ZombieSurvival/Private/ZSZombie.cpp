@@ -7,6 +7,8 @@
 #include "GameFramework/DamageType.h"
 #include "ZSCharacter.h"
 #include "ZombieSurvival.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
 
 AZSZombie::AZSZombie()
 {
@@ -22,6 +24,7 @@ AZSZombie::AZSZombie()
 	this->AttackBox->SetBoxExtent(FVector(AttackRange, 32.f, 72.f));
 	this->AttackBox->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
 	this->AttackBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	this->AttackBox->SetupAttachment(RootComponent);
 }
 
 void AZSZombie::BeginPlay()
@@ -53,7 +56,6 @@ void AZSZombie::Attack()
 	TArray<AActor*> overlappingActors;
 
 	AttackBox->GetOverlappingActors(overlappingActors);
-	UE_LOG(LogTemp, Display, TEXT("Attacking %d targets"), overlappingActors.Num());
 
 	AZSCharacter* potentialPlayer = nullptr;
 	for (const auto& actor : overlappingActors)
@@ -62,7 +64,12 @@ void AZSZombie::Attack()
 		
 		if (!potentialPlayer) continue;
 		
-		UE_LOG(LogTemp, Display, TEXT("Attacking target!"));
+		UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
+		if (animInstance && AttackAnimMontage)
+		{
+			animInstance->Montage_Play(AttackAnimMontage);
+		}
+
 		UGameplayStatics::ApplyDamage(potentialPlayer, AttackDamage, GetController(), this, UDamageType::StaticClass());
 	}
 }

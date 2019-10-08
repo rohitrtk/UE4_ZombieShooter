@@ -15,6 +15,9 @@
 static int32 DebugHealthString = 0;
 FAutoConsoleVariableRef CVARDebugHealthString(TEXT("ZS.DebugHealthString"), DebugHealthString, TEXT("Draws debug strings for characters when they get hit"), ECVF_Cheat);
 
+static bool DebugPlayerGodmode = false;
+FAutoConsoleVariableRef CVARDebugPlayerGodMode(TEXT("ZS.Godmode"), DebugPlayerGodmode, TEXT("Enables/Disables player godmode"), ECVF_Cheat);
+	
 AZSCharacter::AZSCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -173,7 +176,7 @@ void AZSCharacter::ZoomOut()
 void AZSCharacter::OnHealthChanged(UZSHealthComponent* healthComponent, float health, float healthDelta,
 	const class UDamageType* damageType, class AController* instigatedBy, AActor* damageCauser)
 {
-	if (IsDead) return;
+	if (IsDead || DebugPlayerGodmode) return;
 
 	if (DebugHealthString > 0)
 	{

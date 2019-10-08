@@ -6,6 +6,7 @@
 
 class UZSHealthComponent;
 class UBoxComponent;
+class UAnimInstance;
 
 UCLASS()
 class ZOMBIESURVIVAL_API AZSZombie : public ACharacter
@@ -38,4 +39,7 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Component")
 	UBoxComponent* AttackBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
+	UAnimMontage* AttackAnimMontage;
 };
