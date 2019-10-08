@@ -29,7 +29,13 @@ protected:
 	bool IsDead;
 
 	UFUNCTION(BlueprintCallable)
+	void BeginAttack();
+
+	UFUNCTION()
 	void Attack();
+
+	UFUNCTION()
+	void EndAttack();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
 	float AttackRange;
@@ -37,9 +43,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
 	float AttackDamage;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
+	bool IsAttacking;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
+	float TimeBetweenAttacks;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Component")
 	UBoxComponent* AttackBox;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
 	UAnimMontage* AttackAnimMontage;
+
+private:
+	FTimerHandle TimerHandle_Attack;
 };

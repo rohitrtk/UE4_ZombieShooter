@@ -9,6 +9,7 @@
 #include "ZombieSurvival.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
+#include "TimerManager.h"
 
 AZSZombie::AZSZombie()
 {
@@ -18,6 +19,7 @@ AZSZombie::AZSZombie()
 
 	this->AttackRange = 16.f;
 	this->AttackDamage = 50.f;
+	this->TimeBetweenAttacks = 3.f;
 
 	this->AttackBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Attack Box Collider"));
 	this->AttackBox->SetRelativeLocation(FVector(53.f, 0.f, 0.f));
@@ -51,6 +53,24 @@ void AZSZombie::OnHealthChanged(UZSHealthComponent* healthComponent, float healt
 	}
 }
 
+void AZSZombie::BeginAttack()
+{
+	if (IsAttacking) return;
+
+	IsAttacking = true;
+
+	Attack();
+
+	GetWorldTimerManager().SetTimer(TimerHandle_Attack, this, &AZSZombie::EndAttack, TimeBetweenAttacks, false);
+}
+
+void AZSZombie::EndAttack()
+{
+	GetWorldTimerManager().ClearTimer(TimerHandle_Attack);
+
+	IsAttacking = false;
+}
+
 void AZSZombie::Attack()
 {
 	TArray<AActor*> overlappingActors;
@@ -67,6 +87,7 @@ void AZSZombie::Attack()
 		UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
 		if (animInstance && AttackAnimMontage)
 		{
+			UE_LOG(LogTemp, Display, TEXT("Playing animation"));
 			animInstance->Montage_Play(AttackAnimMontage);
 		}
 

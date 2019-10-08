@@ -29,4 +29,7 @@ protected:
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FOnHealthChangedSignature OnHealthChanged;
+
+	FORCEINLINE void SetStartingHealth(float startingHealth) { this->StartingHealth = startingHealth; }
+	FORCEINLINE float GetStartingHealth() { return this->StartingHealth; }
 };
