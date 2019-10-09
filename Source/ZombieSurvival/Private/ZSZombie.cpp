@@ -50,6 +50,11 @@ void AZSZombie::OnHealthChanged(UZSHealthComponent* healthComponent, float healt
 		this->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		this->GetMesh()->SetSimulatePhysics(true);
+
+		if (DeathSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
+		}
 	}
 }
 
@@ -92,5 +97,10 @@ void AZSZombie::Attack()
 		}
 
 		UGameplayStatics::ApplyDamage(potentialPlayer, AttackDamage, GetController(), this, UDamageType::StaticClass());
+	}
+
+	if (AttackSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), AttackSound, GetActorLocation());
 	}
 }
