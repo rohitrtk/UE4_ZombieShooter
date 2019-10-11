@@ -22,10 +22,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	int32 WaitTimer;
 
+	/* Time in seconds between starting of a new round & spawning the first zombie */
+	UPROPERTY()
+	int32 SpawnTimer;
+
 	/* Number of zombies to spawn in the round */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	int32 NumberOfZombiesToSpawn;
 
+	/* Current round */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	int32 Round;
 
@@ -33,10 +38,8 @@ protected:
 	void SpawnZombie();
 
 	void SpawnZombieTimer();
-
-	void StartRound();
-	void EndRound();
-	void WaitForNextRound();
+	void StartNextRound();
+	void EndSpawning();
 	void CheckZombies();
 
 public:
@@ -45,6 +48,4 @@ public:
 private:
 
 	FTimerHandle TimerHandle_ZSpawner;
-	FTimerHandle TimerHandle_RoundStart;
-
 };

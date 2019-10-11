@@ -1,49 +1,48 @@
 #include "ZSGameMode.h"
 #include "Components/ZSHealthComponent.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 AZSGameMode::AZSGameMode()
 {
 	this->ZombieSpawnTimer = 1.f;
 	this->WaitTimer = 2.f;
-	this->NumberOfZombiesToSpawn = 8;
+	this->SpawnTimer = 5.f;
 	this->Round = 0;
 }
 
 void AZSGameMode::SpawnZombieTimer()
 {
+	if (NumberOfZombiesToSpawn <= 0)
+	{
+		EndSpawning();
+		return;
+	}
+
 	SpawnZombie();
 
 	--NumberOfZombiesToSpawn;
-
-	if (NumberOfZombiesToSpawn <= 0) EndRound();
 }
 
-void AZSGameMode::StartRound()
+void AZSGameMode::StartNextRound()
 {
 	++Round;
 
 	NumberOfZombiesToSpawn = Round * 2 + 6;
 
-	GetWorldTimerManager().SetTimer(TimerHandle_ZSpawner, this, &AZSGameMode::SpawnZombieTimer, ZombieSpawnTimer, true, 2.f);
+	GetWorldTimerManager().SetTimer(TimerHandle_ZSpawner, this, &AZSGameMode::SpawnZombieTimer, ZombieSpawnTimer, true, SpawnTimer);
 }
 
-void AZSGameMode::EndRound()
+void AZSGameMode::EndSpawning()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandle_ZSpawner);
-
-	WaitForNextRound();
-}
-
-void AZSGameMode::WaitForNextRound()
-{
-	GetWorldTimerManager().SetTimer(TimerHandle_RoundStart, this, &AZSGameMode::StartRound, WaitTimer, false);
 }
 
 void AZSGameMode::StartPlay()
 {
 	Super::StartPlay();
 
-	WaitForNextRound();
+	StartNextRound();
 }
 
 void AZSGameMode::CheckZombies()
@@ -57,7 +56,7 @@ void AZSGameMode::CheckZombies()
 		APawn* pawn = It->Get();
 		if (!pawn || pawn->IsPlayerControlled()) continue;
 
-		UZSHealthComponent* healthComponent = pawn->GetComponentByClass(UZSHealthComponent::StaticClass());
+		UZSHealthComponent* healthComponent = Cast<UZSHealthComponent>(pawn->GetComponentByClass(UZSHealthComponent::StaticClass()));
 		if (healthComponent && healthComponent->GetCurrentHealth() > 0.f)
 		{
 			proceedToNextRound = false;
@@ -67,6 +66,6 @@ void AZSGameMode::CheckZombies()
 
 	if (proceedToNextRound)
 	{
-		WaitForNextRound();
+		StartNextRound();
 	}
 }
