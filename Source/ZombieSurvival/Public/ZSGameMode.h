@@ -4,6 +4,10 @@
 #include "GameFramework/GameModeBase.h"
 #include "ZSGameMode.generated.h"
 
+class AZSZombie;
+class UEnvQuery;
+struct FEnvQueryResult;
+
 UCLASS()
 class ZOMBIESURVIVAL_API AZSGameMode : public AGameModeBase
 {
@@ -13,6 +17,14 @@ public:
 	AZSGameMode();
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
+	UEnvQuery* SpawnQuery;
+
+	void OnSpawnQueryFinished(TSharedPtr<FEnvQueryResult> result);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
+	TSubclassOf<AZSZombie> SpawnClass;
 
 	/* Time in seconds between spawning zombies */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
@@ -34,7 +46,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	int32 Round;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "GameMode")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
+	TArray<int32> ZombieSpeeds;
+
+	UFUNCTION()
 	void SpawnZombie();
 
 	void SpawnZombieTimer();
@@ -45,7 +60,8 @@ protected:
 public:
 	virtual void StartPlay() override;
 
-private:
+	virtual void Tick(float deltaSeconds) override;
 
+private:
 	FTimerHandle TimerHandle_ZSpawner;
 };

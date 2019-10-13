@@ -2,8 +2,6 @@
 
 UZSHealthComponent::UZSHealthComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
-
 	StartingHealth = 100.f;
 }
 

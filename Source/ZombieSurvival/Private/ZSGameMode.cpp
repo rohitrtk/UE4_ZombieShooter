@@ -2,13 +2,43 @@
 #include "Components/ZSHealthComponent.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "EnvironmentQuery/EnvQueryTypes.h"
+#include "EnvironmentQuery/EnvQueryManager.h"
+#include "ZSZombie.h"
 
 AZSGameMode::AZSGameMode()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickInterval = 1.f;
+
+	ZombieSpeeds.Add(200);
+	ZombieSpeeds.Add(400);
+	ZombieSpeeds.Add(550);
+
 	this->ZombieSpawnTimer = 1.f;
 	this->WaitTimer = 2.f;
 	this->SpawnTimer = 5.f;
 	this->Round = 0;
+}
+
+void AZSGameMode::SpawnZombie()
+{
+	FEnvQueryRequest queryRequest = FEnvQueryRequest(SpawnQuery, this);
+	queryRequest.Execute(EEnvQueryRunMode::RandomBest25Pct, this, &AZSGameMode::OnSpawnQueryFinished);
+}
+
+void AZSGameMode::OnSpawnQueryFinished(TSharedPtr<FEnvQueryResult> result)
+{
+	if (result->IsSuccsessful())
+	{
+		TArray<FVector> locations;
+		result->GetAllAsLocations(locations);
+
+		for (const auto& loc : locations)
+		{
+			GetWorld()->SpawnActor<AZSZombie>(SpawnClass, loc, FRotator::ZeroRotator);
+		}
+	}
 }
 
 void AZSGameMode::SpawnZombieTimer()
@@ -68,4 +98,11 @@ void AZSGameMode::CheckZombies()
 	{
 		StartNextRound();
 	}
+}
+
+void AZSGameMode::Tick(float deltaSeconds)
+{
+	Super::Tick(deltaSeconds);
+
+	CheckZombies();
 }

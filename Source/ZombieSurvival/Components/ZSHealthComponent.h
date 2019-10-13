@@ -32,7 +32,7 @@ public:
 
 	FORCEINLINE void SetStartingHealth(float startingHealth) { this->StartingHealth = startingHealth; }
 	FORCEINLINE float GetStartingHealth() const { return this->StartingHealth; }
-	FORCEINLINE void SetStartingHealth(float newHealth) { this->CurrentHealth = newHealth; }
+	FORCEINLINE void SetCurrentHealth(float newHealth) { this->CurrentHealth = newHealth; }
 	FORCEINLINE float GetCurrentHealth() const { return this->CurrentHealth; }
 	FORCEINLINE void GainHealth(float deltaHealth) { this->CurrentHealth = FMath::Clamp(CurrentHealth + deltaHealth, CurrentHealth, 100.f); }
 };
