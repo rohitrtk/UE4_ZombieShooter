@@ -36,7 +36,16 @@ void AZSGameMode::OnSpawnQueryFinished(TSharedPtr<FEnvQueryResult> result)
 
 		for (const auto& loc : locations)
 		{
-			GetWorld()->SpawnActor<AZSZombie>(SpawnClass, loc, FRotator::ZeroRotator);
+			AZSZombie* zombie = GetWorld()->SpawnActor<AZSZombie>(SpawnClass, loc, FRotator::ZeroRotator);
+		
+			float rand = FMath::FRandRange(1, 10);
+			int32 zWalkSpeed = 0;
+
+			if (rand < 2.5)		zWalkSpeed = ZombieSpeeds[0];
+			else if (rand < 7)	zWalkSpeed = ZombieSpeeds[1];
+			else				zWalkSpeed = ZombieSpeeds[2];
+
+			zombie->GetCharacterMovement()->MaxWalkSpeed = zWalkSpeed;
 		}
 	}
 }
