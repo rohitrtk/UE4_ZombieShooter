@@ -8,6 +8,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UAnimMontage;
 class UZSHealthComponent;
+class UZSScoreComponent;
 class AZSWeapon;
 
 UCLASS()
@@ -50,6 +51,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UZSHealthComponent* HealthComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UZSScoreComponent* ScoreComponent;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
 	TSubclassOf<AZSWeapon> WeaponClass;
 	
@@ -87,6 +91,7 @@ public:
 
 	virtual FVector GetPawnViewLocation() const override;
 
+	FORCEINLINE UZSScoreComponent* GetScoreComponent() const { return this->ScoreComponent; }
 	FORCEINLINE void SetIsReloading(bool isReloading) { this->IsReloading = isReloading; }
 	FORCEINLINE bool GetIsReloading() const { return this->IsReloading; }
 };

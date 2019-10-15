@@ -4,10 +4,11 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/ZSHealthComponent.h"
+#include "Components/ZSScoreComponent.h"
 #include "ZombieSurvival.h"
 #include "ZSWeapon.h"
 #include "DrawDebugHelpers.h"
-#include "Components/ZSHealthComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
@@ -37,6 +38,7 @@ AZSCharacter::AZSCharacter()
 	this->CameraComponent->SetupAttachment(this->SpringArmComponent);
 
 	this->HealthComponent = CreateDefaultSubobject<UZSHealthComponent>(TEXT("Health Component"));
+	this->ScoreComponent = CreateDefaultSubobject<UZSScoreComponent>(TEXT("Score Component"));
 
 	this->DefaultFOV = 90.f;
 	this->ZoomFOV = 40.f;

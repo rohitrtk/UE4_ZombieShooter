@@ -60,7 +60,7 @@ void AZSZombie::OnHealthChanged(UZSHealthComponent* healthComponent, float healt
 
 void AZSZombie::BeginAttack()
 {
-	if (IsAttacking) return;
+	if (IsAttacking || IsDead) return;
 
 	IsAttacking = true;
 

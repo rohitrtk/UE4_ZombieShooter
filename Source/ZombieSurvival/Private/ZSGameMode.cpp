@@ -5,6 +5,7 @@
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "ZSZombie.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AZSGameMode::AZSGameMode()
 {
@@ -29,25 +30,21 @@ void AZSGameMode::SpawnZombie()
 
 void AZSGameMode::OnSpawnQueryFinished(TSharedPtr<FEnvQueryResult> result)
 {
-	if (result->IsSuccsessful())
-	{
-		TArray<FVector> locations;
-		result->GetAllAsLocations(locations);
+	if (!result->IsSuccsessful()) return;
 
-		for (const auto& loc : locations)
-		{
-			AZSZombie* zombie = GetWorld()->SpawnActor<AZSZombie>(SpawnClass, loc, FRotator::ZeroRotator);
-		
-			float rand = FMath::FRandRange(1, 10);
-			int32 zWalkSpeed = 0;
+	TArray<FVector> locations;
+	result->GetAllAsLocations(locations);
 
-			if (rand < 2.5)		zWalkSpeed = ZombieSpeeds[0];
-			else if (rand < 7)	zWalkSpeed = ZombieSpeeds[1];
-			else				zWalkSpeed = ZombieSpeeds[2];
+	AZSZombie* zombie = GetWorld()->SpawnActor<AZSZombie>(SpawnClass, locations[0], FRotator::ZeroRotator);
 
-			zombie->GetCharacterMovement()->MaxWalkSpeed = zWalkSpeed;
-		}
-	}
+	float rand = FMath::FRandRange(1, 10);
+	int32 zWalkSpeed = 0;
+
+	if (rand < 2.5)		zWalkSpeed = ZombieSpeeds[0];
+	else if (rand < 7)	zWalkSpeed = ZombieSpeeds[1];
+	else				zWalkSpeed = ZombieSpeeds[2];
+
+	zombie->GetCharacterMovement()->MaxWalkSpeed = zWalkSpeed;
 }
 
 void AZSGameMode::SpawnZombieTimer()

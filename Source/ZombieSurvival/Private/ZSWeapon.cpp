@@ -8,6 +8,7 @@
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "TimerManager.h"
 #include "ZSCharacter.h"
+#include "Components/ZSScoreComponent.h"
 
 static int32 DebugWeaponDrawing = 0;
 FAutoConsoleVariableRef CVARDebugWeaponDrawing(TEXT("ZS.DebugWeapons"), DebugWeaponDrawing, TEXT("Draws debug lines for weapons"), ECVF_Cheat);
@@ -17,14 +18,14 @@ AZSWeapon::AZSWeapon()
 	this->SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal Mesh"));
 	RootComponent = this->SkeletalMeshComponent;
 
-	this->MuzzleSocketName	 = "MuzzleSocket";
-	this->TracerTargetName	 = "Target";
+	this->MuzzleSocketName = "MuzzleSocket";
+	this->TracerTargetName = "Target";
 
-	this->DefaultDamage		 = 15.f;
-	this->RateOfFire		 = 600;
+	this->DefaultDamage = 15.f;
+	this->RateOfFire = 600;
 
-	this->MaxAmmo			 = 30;
-	this->TimeToReload		 = 2;
+	this->MaxAmmo = 30;
+	this->TimeToReload = 2;
 
 	this->BulletSpreadRadius = 2.f;
 }
@@ -81,17 +82,23 @@ void AZSWeapon::Fire()
 
 		UGameplayStatics::ApplyPointDamage(hitActor, damage, shotDirection, hitResult, owner->GetInstigatorController(), this, DamageType);
 
+		int32 scoreDelta = 0;
+
 		UParticleSystem* selectedEffect = nullptr;
 		switch (surfaceType)
 		{
 		case SURFACE_FLESHDEFAULT:
+			scoreDelta += 30;
 		case SURFACE_FLESHCRITICAL:
 			selectedEffect = FleshImpactEffect;
+			scoreDelta *= 2;
 			break;
 		default:
 			selectedEffect = DefaultImpactEffect;
 			break;
 		}
+
+		owner->GetScoreComponent()->ChangeScore(scoreDelta);
 
 		if (selectedEffect)
 		{
