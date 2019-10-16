@@ -87,21 +87,30 @@ void AZSGameMode::CheckZombies()
 
 	bool proceedToNextRound = true;
 
+	TArray<AZSZombie*> zombies;
+
 	for (FConstPawnIterator It = GetWorld()->GetPawnIterator(); It; ++It)
 	{
-		APawn* pawn = It->Get();
-		if (!pawn || pawn->IsPlayerControlled()) continue;
+		AZSZombie* zombie = Cast<AZSZombie>(It->Get());
+		if (!zombie || zombie->IsPlayerControlled()) continue;
 
-		UZSHealthComponent* healthComponent = Cast<UZSHealthComponent>(pawn->GetComponentByClass(UZSHealthComponent::StaticClass()));
+		UZSHealthComponent* healthComponent = Cast<UZSHealthComponent>(zombie->GetComponentByClass(UZSHealthComponent::StaticClass()));
 		if (healthComponent && healthComponent->GetCurrentHealth() > 0.f)
 		{
 			proceedToNextRound = false;
 			break;
 		}
+
+		zombies.Add(zombie);
 	}
 
 	if (proceedToNextRound)
 	{
+		for (const auto& zombie : zombies)
+		{
+			zombie->Destroy();
+		}
+
 		StartNextRound();
 	}
 }

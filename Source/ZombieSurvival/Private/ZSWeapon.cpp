@@ -99,6 +99,7 @@ void AZSWeapon::Fire()
 		}
 
 		owner->GetScoreComponent()->ChangeScore(scoreDelta);
+		UE_LOG(LogTemp, Display, TEXT("Score: %d"), owner->GetScoreComponent()->GetScore())
 
 		if (selectedEffect)
 		{

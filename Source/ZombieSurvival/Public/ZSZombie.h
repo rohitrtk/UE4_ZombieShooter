@@ -56,11 +56,20 @@ protected:
 	UAnimMontage* AttackAnimMontage;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
-	USoundBase* DeathSound;
+	TArray<USoundBase*> AmbientSounds;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
-	USoundBase* AttackSound;
+	TArray<USoundBase*> DeathSounds;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
+	TArray<USoundBase*> AttackSounds;
+
+	UFUNCTION()
+	void PlayAmbientSound();
 
 private:
+	FTimerHandle TimerHandle_Ambient;
 	FTimerHandle TimerHandle_Attack;
+
+	float ambientSoundTimer;
 };

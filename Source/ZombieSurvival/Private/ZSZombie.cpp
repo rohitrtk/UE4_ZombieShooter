@@ -36,6 +36,12 @@ void AZSZombie::BeginPlay()
 	this->AttackBox->SetBoxExtent(FVector(AttackRange, 32.f, 72.f));
 
 	this->HealthComponent->OnHealthChanged.AddDynamic(this, &AZSZombie::OnHealthChanged);
+
+	ambientSoundTimer = FMath::RandRange(60, 180);
+	if (AmbientSounds.Num() > 0)
+	{
+		GetWorldTimerManager().SetTimer(TimerHandle_Ambient, this, &AZSZombie::PlayAmbientSound, ambientSoundTimer, false);
+	}
 }
 
 void AZSZombie::OnHealthChanged(UZSHealthComponent* healthComponent, float health, float healthDelta, const class UDamageType* damageType, class AController* instigatedBy, AActor* damageCauser)
@@ -51,9 +57,10 @@ void AZSZombie::OnHealthChanged(UZSHealthComponent* healthComponent, float healt
 
 		this->GetMesh()->SetSimulatePhysics(true);
 
-		if (DeathSound)
+		if (DeathSounds.Num() > 0)
 		{
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
+			USoundBase* deathSound = DeathSounds[FMath::RandRange(0, DeathSounds.Num() - 1)];
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), deathSound, GetActorLocation());
 		}
 	}
 }
@@ -99,8 +106,21 @@ void AZSZombie::Attack()
 		UGameplayStatics::ApplyDamage(potentialPlayer, AttackDamage, GetController(), this, UDamageType::StaticClass());
 	}
 
-	if (AttackSound)
+	if (AttackSounds.Num() > 0)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), AttackSound, GetActorLocation());
+		USoundBase* attackSound = AttackSounds[FMath::RandRange(0, AttackSounds.Num() - 1)];
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), attackSound, GetActorLocation());
 	}
+}
+
+void AZSZombie::PlayAmbientSound()
+{
+	if (AmbientSounds.Num() > 0)
+	{
+		USoundBase* ambientSound = AmbientSounds[FMath::RandRange(0, AmbientSounds.Num() - 1)];
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ambientSound, GetActorLocation());
+	}
+
+	ambientSoundTimer = FMath::RandRange(60, 180);
+	GetWorldTimerManager().SetTimer(TimerHandle_Ambient, this, &AZSZombie::PlayAmbientSound, ambientSoundTimer, false);
 }
