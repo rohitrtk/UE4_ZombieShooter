@@ -1,20 +1,20 @@
 #include "ZSGameMode.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/ZSHealthComponent.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 #include "ZSZombie.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 AZSGameMode::AZSGameMode()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickInterval = 1.f;
 
-	ZombieSpeeds.Add(200);
-	ZombieSpeeds.Add(400);
-	ZombieSpeeds.Add(550);
+	ZombieSpeeds.Add(ZSPEED_SLOW);
+	ZombieSpeeds.Add(ZSPEED_MEDIUM);
+	ZombieSpeeds.Add(ZSPEED_FAST);
 
 	this->ZombieSpawnTimer = 1.f;
 	this->WaitTimer = 2.f;
@@ -36,6 +36,11 @@ void AZSGameMode::OnSpawnQueryFinished(TSharedPtr<FEnvQueryResult> result)
 	result->GetAllAsLocations(locations);
 
 	AZSZombie* zombie = GetWorld()->SpawnActor<AZSZombie>(SpawnClass, locations[0], FRotator::ZeroRotator);
+
+	if (!zombie)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to spawn zombie!"));
+	}
 
 	float rand = FMath::FRandRange(1, 10);
 	int32 zWalkSpeed = 0;

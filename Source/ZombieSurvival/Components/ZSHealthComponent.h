@@ -17,16 +17,20 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/* Components starting health */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Health Component")
 	float StartingHealth;
 
+	/* Components current health */
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Health Component")
 	float CurrentHealth;
 
+	/* Called when the component owner takes damage */
 	UFUNCTION()
 	void HandleTakeAnyDamage(AActor* damagedActor, float damage, const class UDamageType* damageType,
 		class AController* instigatedBy, AActor* damageCauser);
 public:
+	/* Handles health change */
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FOnHealthChangedSignature OnHealthChanged;
 

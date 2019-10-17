@@ -4,6 +4,10 @@
 #include "GameFramework/GameModeBase.h"
 #include "ZSGameMode.generated.h"
 
+#define ZSPEED_SLOW		200
+#define ZSPEED_MEDIUM	360
+#define ZSPEED_FAST		575
+
 class AZSZombie;
 class UEnvQuery;
 struct FEnvQueryResult;
@@ -18,11 +22,14 @@ public:
 
 protected:
 
+	/* Query that determines where the spawn points of the zombies will be */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	UEnvQuery* SpawnQuery;
 
+	/* Function to run when the query executed finishes */
 	void OnSpawnQueryFinished(TSharedPtr<FEnvQueryResult> result);
 
+	/* Zombie class that will be spawned */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	TSubclassOf<AZSZombie> SpawnClass;
 
@@ -46,20 +53,28 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	int32 Round;
 
+	/* Array of movement speeds for the zombies */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	TArray<int32> ZombieSpeeds;
 
+	/* Spawns a zombie */
 	UFUNCTION()
 	void SpawnZombie();
 
+	/* Spawns zombies until the number of zombies for the round has been completed */
 	void SpawnZombieTimer();
+
+	/* Starts the next round */
 	void StartNextRound();
+
+	/* Stops spawning zombies for the round */
 	void EndSpawning();
+
+	/* Checks the current number of zombies in the round */
 	void CheckZombies();
 
 public:
 	virtual void StartPlay() override;
-
 	virtual void Tick(float deltaSeconds) override;
 
 private:

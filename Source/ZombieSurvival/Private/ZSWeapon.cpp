@@ -7,6 +7,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "Components/ZSScoreComponent.h"
+#include "GameFramework/DamageType.h"
 #include "TimerManager.h"
 #include "ZSCharacter.h"
 #include "ZSZombie.h"
@@ -83,7 +84,7 @@ void AZSWeapon::Fire()
 			damage *= 3.f;
 		}
 
-		UGameplayStatics::ApplyPointDamage(hitActor, damage, shotDirection, hitResult, owner->GetInstigatorController(), this, DamageType);
+		UGameplayStatics::ApplyPointDamage(hitActor, damage, shotDirection, hitResult, owner->GetInstigatorController(), this, UDamageType::StaticClass());
 
 		int32 scoreDelta = 0;
 
@@ -163,11 +164,6 @@ void AZSWeapon::StopFire()
 void AZSWeapon::Reload()
 {
 	GetWorldTimerManager().SetTimer(TimerHandle_Reload, this, &AZSWeapon::EndReload, TimeToReload, false);
-
-	if (this->ReloadStartSoundEffect)
-	{
-		UGameplayStatics::SpawnSoundAttached(ReloadStartSoundEffect, RootComponent);
-	}
 }
 
 void AZSWeapon::EndReload()
@@ -178,9 +174,4 @@ void AZSWeapon::EndReload()
 	this->CurrentAmmo = MaxAmmo;
 
 	GetWorldTimerManager().ClearTimer(TimerHandle_Reload);
-
-	if (this->ReloadFinishSoundEffect)
-	{
-		UGameplayStatics::SpawnSoundAttached(ReloadFinishSoundEffect, RootComponent);
-	}
 }

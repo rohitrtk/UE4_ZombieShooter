@@ -16,6 +16,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/* Components current score */
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
 	int32 Score;
 
