@@ -24,8 +24,8 @@ protected:
 	float CurrentHealth;
 
 	UFUNCTION()
-	void HandleTakeAnyDamage(AActor* damagedActor, float damage, const class UDamageType* damageType, class AController* instigatedBy, AActor* damageCauser);
-
+	void HandleTakeAnyDamage(AActor* damagedActor, float damage, const class UDamageType* damageType,
+		class AController* instigatedBy, AActor* damageCauser);
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FOnHealthChangedSignature OnHealthChanged;

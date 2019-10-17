@@ -16,6 +16,8 @@ class ZOMBIESURVIVAL_API AZSZombie : public ACharacter
 public:
 	AZSZombie();
 
+	FORCEINLINE bool GetIsDead() { return this->IsDead; }
+
 protected:
 	virtual void BeginPlay() override;
 

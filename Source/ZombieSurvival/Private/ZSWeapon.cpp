@@ -6,9 +6,10 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "Components/ZSScoreComponent.h"
 #include "TimerManager.h"
 #include "ZSCharacter.h"
-#include "Components/ZSScoreComponent.h"
+#include "ZSZombie.h"
 
 static int32 DebugWeaponDrawing = 0;
 FAutoConsoleVariableRef CVARDebugWeaponDrawing(TEXT("ZS.DebugWeapons"), DebugWeaponDrawing, TEXT("Draws debug lines for weapons"), ECVF_Cheat);
@@ -64,11 +65,13 @@ void AZSWeapon::Fire()
 	queryParameters.bReturnPhysicalMaterial = true;
 
 	AActor* hitActor = nullptr;
+	AZSZombie* hitZombie = nullptr;
 
 	FHitResult hitResult;
 	if (GetWorld()->LineTraceSingleByChannel(hitResult, eyePosition, traceEnd, COLLISION_WEAPON, queryParameters))
 	{
 		hitActor = hitResult.GetActor();
+		hitZombie = Cast<AZSZombie>(hitActor);
 
 		traceEndPoint = hitResult.ImpactPoint;
 
@@ -88,10 +91,17 @@ void AZSWeapon::Fire()
 		switch (surfaceType)
 		{
 		case SURFACE_FLESHDEFAULT:
-			scoreDelta += 30;
 		case SURFACE_FLESHCRITICAL:
 			selectedEffect = FleshImpactEffect;
-			scoreDelta *= 2;
+			
+			scoreDelta += 5;
+
+			if (hitZombie && hitZombie->GetIsDead() &&
+				surfaceType == SURFACE_FLESHCRITICAL)
+			{
+				scoreDelta *= 2;
+			}
+
 			break;
 		default:
 			selectedEffect = DefaultImpactEffect;
@@ -99,7 +109,6 @@ void AZSWeapon::Fire()
 		}
 
 		owner->GetScoreComponent()->ChangeScore(scoreDelta);
-		UE_LOG(LogTemp, Display, TEXT("Score: %d"), owner->GetScoreComponent()->GetScore())
 
 		if (selectedEffect)
 		{

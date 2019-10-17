@@ -110,7 +110,7 @@ void AZSGameMode::CheckZombies()
 		{
 			zombie->Destroy();
 		}
-
+		UE_LOG(LogTemp, Display, TEXT("Starting next round"));
 		StartNextRound();
 	}
 }
