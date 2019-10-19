@@ -9,7 +9,6 @@
 #include "ZombieSurvival.h"
 #include "ZSWeapon.h"
 #include "DrawDebugHelpers.h"
-#include "Blueprint/UserWidget.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
 
