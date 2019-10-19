@@ -100,6 +100,8 @@ void AZSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &AZSCharacter::ZoomIn);
 	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &AZSCharacter::ZoomOut);
+
+	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &AZSCharacter::PauseGame);
 }
 
 void AZSCharacter::StartFire()

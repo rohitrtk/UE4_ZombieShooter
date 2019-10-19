@@ -42,6 +42,10 @@ protected:
 	/* Stops firing weapon */
 	void StopFire();
 
+	/* Handles pausing and unpausing the game */
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void PauseGame();
+
 	/* Reloads weapon */
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void ReloadWeapon();
