@@ -98,7 +98,6 @@ protected:
 	/* Guns bullet spread */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
 	float BulletSpreadRadius;
-
 private:
 	FTimerHandle TimerHandle_TimeBetweenShots;
 	FTimerHandle TimerHandle_Reload;

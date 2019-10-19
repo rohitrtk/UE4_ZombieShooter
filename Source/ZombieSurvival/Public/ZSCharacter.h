@@ -45,6 +45,10 @@ protected:
 	/* Handles pausing and unpausing the game */
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void PauseGame();
+	
+	/* Handles readying of the player before each round starts */
+	UFUNCTION(BlueprintCallable)
+	void ReadyUp();
 
 	/* Reloads weapon */
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
@@ -110,6 +114,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay")
 	UAnimMontage* ReloadAnimMontage;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
+	bool PlayerReady;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 
@@ -121,4 +128,6 @@ public:
 	FORCEINLINE UZSScoreComponent* GetScoreComponent() const { return this->ScoreComponent; }
 	FORCEINLINE void SetIsReloading(bool isReloading) { this->IsReloading = isReloading; }
 	FORCEINLINE bool GetIsReloading() const { return this->IsReloading; }
+	FORCEINLINE void SetPlayerReady(bool playerReady) { this->PlayerReady = playerReady; }
+	FORCEINLINE bool GetPlayerReady() const { return this->PlayerReady; }
 };

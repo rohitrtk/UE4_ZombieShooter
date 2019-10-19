@@ -16,8 +16,6 @@ class ZOMBIESURVIVAL_API AZSZombie : public ACharacter
 public:
 	AZSZombie();
 
-	FORCEINLINE bool GetIsDead() { return this->IsDead; }
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -83,6 +81,10 @@ protected:
 	/* Called randomly to play ambient sounds */
 	UFUNCTION()
 	void PlayAmbientSound();
+
+public:
+	FORCEINLINE bool GetIsDead() const { return this->IsDead; }
+	FORCEINLINE UZSHealthComponent* const GetHealthComponent() { return this->HealthComponent; }
 
 private:
 	FTimerHandle TimerHandle_Ambient;

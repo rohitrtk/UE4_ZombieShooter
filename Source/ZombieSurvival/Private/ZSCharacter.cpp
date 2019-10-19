@@ -101,6 +101,8 @@ void AZSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &AZSCharacter::ZoomOut);
 
 	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &AZSCharacter::PauseGame);
+
+	PlayerInputComponent->BindAction("ReadyUp", IE_Pressed,this, &AZSCharacter::ReadyUp);
 }
 
 void AZSCharacter::StartFire()
@@ -174,6 +176,13 @@ void AZSCharacter::ZoomIn()
 void AZSCharacter::ZoomOut()
 {
 	this->IsZoomed = false;
+}
+
+void AZSCharacter::ReadyUp()
+{
+	if (PlayerReady) return;
+
+	this->PlayerReady = true;
 }
 
 void AZSCharacter::OnHealthChanged(UZSHealthComponent* healthComponent, float health, float healthDelta,

@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "ZSZombie.h"
+#include "ZSCharacter.h"
 
 AZSGameMode::AZSGameMode()
 {
@@ -20,6 +21,8 @@ AZSGameMode::AZSGameMode()
 	this->WaitTimer = 2.f;
 	this->SpawnTimer = 5.f;
 	this->Round = 0;
+
+	this->RoundInProgress = false;
 }
 
 void AZSGameMode::SpawnZombie()
@@ -40,16 +43,17 @@ void AZSGameMode::OnSpawnQueryFinished(TSharedPtr<FEnvQueryResult> result)
 	if (!zombie)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Failed to spawn zombie!"));
+		return;
 	}
 
+	zombie->GetHealthComponent()->SetStartingHealth(ZHEALTH * Round);
+
 	float rand = FMath::FRandRange(1, 10);
-	int32 zWalkSpeed = 0;
+	float& zombieWalkSpeed = zombie->GetCharacterMovement()->MaxWalkSpeed;
 
-	if (rand < 2.5)		zWalkSpeed = ZombieSpeeds[0];
-	else if (rand < 7)	zWalkSpeed = ZombieSpeeds[1];
-	else				zWalkSpeed = ZombieSpeeds[2];
-
-	zombie->GetCharacterMovement()->MaxWalkSpeed = zWalkSpeed;
+	if (rand < 2.5)		zombieWalkSpeed = ZombieSpeeds[0];
+	else if (rand < 7)	zombieWalkSpeed = ZombieSpeeds[1];
+	else				zombieWalkSpeed = ZombieSpeeds[2];
 }
 
 void AZSGameMode::SpawnZombieTimer()
@@ -67,6 +71,8 @@ void AZSGameMode::SpawnZombieTimer()
 
 void AZSGameMode::StartNextRound()
 {
+	RoundInProgress = true;
+
 	++Round;
 
 	NumberOfZombiesToSpawn = Round * 2 + 6;
@@ -83,7 +89,13 @@ void AZSGameMode::StartPlay()
 {
 	Super::StartPlay();
 
-	StartNextRound();
+	// Get pointer to the player
+	for (FConstPawnIterator It = GetWorld()->GetPawnIterator(); It; ++It)
+	{
+		this->Player = Cast<AZSCharacter>(It->Get());
+
+		if (Player) break;
+	}
 }
 
 void AZSGameMode::CheckZombies()
@@ -109,13 +121,23 @@ void AZSGameMode::CheckZombies()
 		zombies.Add(zombie);
 	}
 
+	// Round is no longer in progress as all the zombies are dead
 	if (proceedToNextRound)
 	{
 		for (const auto& zombie : zombies)
 		{
 			zombie->Destroy();
 		}
-		UE_LOG(LogTemp, Display, TEXT("Starting next round"));
+		
+		RoundInProgress = false;
+		Player->SetPlayerReady(false);
+	}
+}
+
+void AZSGameMode::CheckPlayersReady()
+{
+	if (Player->GetPlayerReady())
+	{
 		StartNextRound();
 	}
 }
@@ -124,5 +146,12 @@ void AZSGameMode::Tick(float deltaSeconds)
 {
 	Super::Tick(deltaSeconds);
 
-	CheckZombies();
+	if (RoundInProgress)
+	{
+		CheckZombies();
+	}
+	else
+	{
+		CheckPlayersReady();
+	}
 }

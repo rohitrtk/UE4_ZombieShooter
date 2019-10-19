@@ -4,12 +4,15 @@
 #include "GameFramework/GameModeBase.h"
 #include "ZSGameMode.generated.h"
 
+#define ZHEALTH			100
 #define ZSPEED_SLOW		200
 #define ZSPEED_MEDIUM	360
 #define ZSPEED_FAST		575
 
 class AZSZombie;
+class AZSCharacter;
 class UEnvQuery;
+
 struct FEnvQueryResult;
 
 UCLASS()
@@ -57,6 +60,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	TArray<int32> ZombieSpeeds;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
+	bool RoundInProgress;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
+	AZSCharacter* Player;
+
 	/* Spawns a zombie */
 	UFUNCTION()
 	void SpawnZombie();
@@ -72,6 +81,9 @@ protected:
 
 	/* Checks the current number of zombies in the round */
 	void CheckZombies();
+
+	/* Checks if player is ready */
+	void CheckPlayersReady();
 
 public:
 	virtual void StartPlay() override;
