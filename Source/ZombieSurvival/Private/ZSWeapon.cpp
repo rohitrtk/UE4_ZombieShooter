@@ -125,6 +125,29 @@ void AZSWeapon::Fire()
 	}
 
 	PlayFireEffects(traceEndPoint);
+
+	HandleRecoil(owner);
+}
+
+void AZSWeapon::HandleRecoil(AZSCharacter* owner)
+{
+	// Vertical Recoil
+	float y = 0;
+	float x = MaxAmmo - CurrentAmmo;
+
+	if (x < 15)
+	{
+		y = .2f * FMath::Square(CurrentAmmo);
+	}
+	else
+	{
+		y = .2f * (2 * FMath::Square(CurrentAmmo - 3) + 2);
+	}
+
+	owner->AddControllerPitchInput(y);
+
+	// Horizontal Recoil
+	owner->AddControllerYawInput(.2f);
 }
 
 void AZSWeapon::PlayFireEffects(const FVector& traceEndPoint)

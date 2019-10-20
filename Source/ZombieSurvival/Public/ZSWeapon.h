@@ -7,6 +7,7 @@
 class USkeletalMeshComponent;
 class UParticleSystem;
 class USoundBase;
+class AZSCharacter;
 
 UCLASS()
 class ZOMBIESURVIVAL_API AZSWeapon : public AActor
@@ -38,6 +39,9 @@ protected:
 
 	/* Stops reloading */
 	void EndReload();
+
+	/* Handles moving the player camera to simulate recoil */
+	void HandleRecoil(AZSCharacter* owner);
 
 	/* Weapons skeletal mesh */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
