@@ -35,7 +35,6 @@ AZSCharacter::AZSCharacter()
 	this->CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	this->CameraComponent->AddRelativeLocation(FVector(0.f, 50.f, 0.f));
 	this->CameraComponent->SetupAttachment(this->SpringArmComponent);
-	//this->CameraComponent->SetupAttachment(GetMesh(), "Head");
 
 	this->HealthComponent = CreateDefaultSubobject<UZSHealthComponent>(TEXT("Health Component"));
 	this->ScoreComponent = CreateDefaultSubobject<UZSScoreComponent>(TEXT("Score Component"));

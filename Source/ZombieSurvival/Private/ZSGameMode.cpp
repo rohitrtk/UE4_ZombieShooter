@@ -126,7 +126,7 @@ void AZSGameMode::CheckZombies()
 	{
 		for (const auto& zombie : zombies)
 		{
-			zombie->Destroy();
+			zombie->SetLifeSpan(3.f);
 		}
 		
 		RoundInProgress = false;

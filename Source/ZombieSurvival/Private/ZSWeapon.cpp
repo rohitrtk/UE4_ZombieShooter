@@ -131,23 +131,13 @@ void AZSWeapon::Fire()
 
 void AZSWeapon::HandleRecoil(AZSCharacter* owner)
 {
+	float movementRecoil = owner->GetVelocity().Size() / 550;
+
 	// Vertical Recoil
-	float y = 0;
-	float x = MaxAmmo - CurrentAmmo;
-
-	if (x < 15)
-	{
-		y = .2f * FMath::Square(CurrentAmmo);
-	}
-	else
-	{
-		y = .2f * (2 * FMath::Square(CurrentAmmo - 3) + 2);
-	}
-
-	owner->AddControllerPitchInput(y);
+	owner->AddControllerPitchInput(-1 * FMath::RandRange(.25f + movementRecoil, .5f + movementRecoil));
 
 	// Horizontal Recoil
-	owner->AddControllerYawInput(.2f);
+	owner->AddControllerYawInput(FMath::RandRange(-.1f - movementRecoil, 1.f + movementRecoil));
 }
 
 void AZSWeapon::PlayFireEffects(const FVector& traceEndPoint)
